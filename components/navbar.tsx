@@ -22,13 +22,24 @@ export default function Navbar() {
 					<h1 className="text-2xl font-bold hidden sm:block">GepukJom</h1>
 				</Link>
 				<div className="flex flex-row items-center justify-between gap-2">
-					<Button
-						type="button"
-						aria-label="login-button"
-						className="font-semibold"
-					>
-						Login
-					</Button>
+					<Link href="/auth/login">
+						<Button
+							type="button"
+							aria-label="login-button"
+							className="font-semibold"
+						>
+							Login
+						</Button>
+					</Link>
+					<Link href="/auth/register">
+						<Button
+							type="button"
+							aria-label="register-button"
+							className="font-semibold"
+						>
+							Register
+						</Button>
+					</Link>
 					<ThemeSwitcher />
 				</div>
 			</div>
