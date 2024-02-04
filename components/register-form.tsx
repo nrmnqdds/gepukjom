@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 import { CreateUser } from "@/lib/server/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -54,10 +55,27 @@ const RegisterForm = () => {
 		},
 	});
 
+	const { toast } = useToast();
+
 	const registerMutation = useMutation({
 		mutationKey: ["register"],
 		mutationFn: async (values: z.infer<typeof formSchema>) =>
-			await CreateUser(values.username, values.email, values.password),
+			await CreateUser(values),
+		onSuccess: (data) => {
+			if (data.success) {
+				toast({
+					title: "Account Created",
+					description: "Please check your email to verify your account.",
+				});
+				router.push("/auth/login");
+			} else {
+				toast({
+					title: "Error",
+					description: data.message,
+					variant: "destructive",
+				});
+			}
+		},
 	});
 
 	const router = useRouter();
@@ -132,8 +150,12 @@ const RegisterForm = () => {
 						>
 							Cancel
 						</Button>
-						<Button type="submit" className="font-semibold">
-							Register
+						<Button
+							type="submit"
+							className="font-semibold"
+							disabled={registerMutation.isPending}
+						>
+							{registerMutation.isPending ? "Loading" : "Register"}
 						</Button>
 					</div>
 				</form>
