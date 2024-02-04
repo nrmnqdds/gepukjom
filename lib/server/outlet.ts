@@ -1,9 +1,11 @@
 "use server";
 
-import { db } from "@/db";
-import { outlets } from "@/db/schema/outlets";
+import { supabase } from "@/lib/supabase";
 
 export async function GetAllOutlets() {
-	const res = await db.select().from(outlets);
-	return res;
+	const { data, error } = await supabase.from("outlets").select();
+	if (error) {
+		throw error;
+	}
+	return data;
 }
