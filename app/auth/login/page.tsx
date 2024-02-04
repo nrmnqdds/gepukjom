@@ -1,4 +1,4 @@
-import LoginForm from "@/components/login-form";
+import LoginForm from "@/components/auth/login-form";
 import LOGO from "@/public/gepukjom.svg";
 import Image from "next/image";
 

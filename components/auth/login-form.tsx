@@ -12,76 +12,63 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { CreateUser } from "@/lib/server/auth";
+import { LoginUser } from "@/lib/server/auth/login-user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-const formSchema = z
-	.object({
-		email: z.string().email({
-			message: "Invalid email address.",
-		}),
-		username: z.string().min(2, {
-			message: "Username must be at least 2 characters.",
-		}),
-		password: z.string().min(4, {
-			message: "Password must be at least 4 characters.",
-		}),
-		confirmPassword: z.string().min(4, {
-			message: "Password must be at least 4 characters.",
-		}),
-	})
-	.superRefine(({ confirmPassword, password }, ctx) => {
-		if (password !== confirmPassword) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: "Passwords do not match.",
-				path: ["confirmPassword"],
-			});
-		}
-	});
+const formSchema = z.object({
+	email: z.string().email().min(2, {
+		message: "Email must be at least 2 characters.",
+	}),
+	password: z.string().min(4, {
+		message: "Password must be at least 4 characters.",
+	}),
+});
 
-const RegisterForm = () => {
+const LoginForm = () => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			username: "",
 			email: "",
 			password: "",
-			confirmPassword: "",
 		},
 	});
 
 	const { toast } = useToast();
+	const router = useRouter();
 
-	const registerMutation = useMutation({
-		mutationKey: ["register"],
+	const loginMutation = useMutation({
+		mutationKey: ["login"],
 		mutationFn: async (values: z.infer<typeof formSchema>) =>
-			await CreateUser(values),
+			await LoginUser(values),
 		onSuccess: (data) => {
-			if (data.success) {
+			if (data?.success) {
 				toast({
-					title: "Account Created",
-					description: "Please check your email to verify your account.",
+					title: "Login Successful!",
 				});
-				router.push("/auth/login");
+
+				router.push("/");
 			} else {
 				toast({
-					title: "Error",
-					description: data.message,
+					title: "An error occured!",
+					description: data?.message,
 					variant: "destructive",
 				});
 			}
 		},
+		onError: (err) =>
+			toast({
+				title: "An error occured",
+				description: err.message,
+				variant: "destructive",
+			}),
 	});
 
-	const router = useRouter();
-
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		registerMutation.mutateAsync(values);
+		loginMutation.mutateAsync(values);
 	}
 
 	return (
@@ -106,15 +93,6 @@ const RegisterForm = () => {
 							)}
 						</div>
 						<div className="space-y-1">
-							<Label htmlFor="username">Username</Label>
-							<Input type="text" id="username" {...form.register("username")} />
-							{form.formState.errors && (
-								<p className="text-red-500 text-sm">
-									{form.formState.errors.username?.message}
-								</p>
-							)}
-						</div>
-						<div className="space-y-1">
 							<Label htmlFor="password">Password</Label>
 							<Input
 								type="password"
@@ -124,19 +102,6 @@ const RegisterForm = () => {
 							{form.formState.errors && (
 								<p className="text-red-500 text-sm">
 									{form.formState.errors.password?.message}
-								</p>
-							)}
-						</div>
-						<div className="space-y-1">
-							<Label htmlFor="password">Confirm Password</Label>
-							<Input
-								type="password"
-								id="confirm-password"
-								{...form.register("confirmPassword")}
-							/>
-							{form.formState.errors && (
-								<p className="text-red-500 text-sm">
-									{form.formState.errors.confirmPassword?.message}
 								</p>
 							)}
 						</div>
@@ -153,18 +118,18 @@ const RegisterForm = () => {
 						<Button
 							type="submit"
 							className="font-semibold"
-							disabled={registerMutation.isPending}
+							disabled={loginMutation.isPending}
 						>
-							{registerMutation.isPending ? "Loading" : "Register"}
+							{loginMutation.isPending ? "Logging in..." : "Log In"}
 						</Button>
 					</div>
 				</form>
 			</CardContent>
 			<CardFooter>
 				<p>
-					Already have an account?{" "}
-					<a href="/auth/login" className="text-blue-500 hover:underline">
-						Login
+					Don&apos;t have an account?{" "}
+					<a href="/auth/register" className="text-blue-500 hover:underline">
+						Register
 					</a>
 				</p>
 			</CardFooter>
@@ -172,4 +137,4 @@ const RegisterForm = () => {
 	);
 };
 
-export default RegisterForm;
+export default LoginForm;
