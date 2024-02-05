@@ -1,6 +1,10 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+import { createClient } from "@/lib/supabase/actions";
 
 const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
 const todayDate = new Date().toISOString().split("T")[1];
@@ -11,41 +15,30 @@ export async function LoginUser(values: {
 }) {
 	const { email, password } = values;
 	try {
-		const { data, error } = await supabase.auth.signInWithPassword({
+		const cookieStore = cookies();
+		const supabase = createClient(cookieStore);
+
+		const { error } = await supabase.auth.signInWithPassword({
 			email,
 			password,
 		});
 
 		if (error) {
 			console.log(error);
-			return {
-				success: false,
-				message: error.message,
-			};
+			throw new Error(error.message);
 		}
 
-		return {
-			success: true,
-			message: "Logged in",
-		};
+		revalidatePath("/", "layout");
+		redirect("/");
 	} catch (error) {
 		if (error instanceof Error) {
-			return {
-				success: false,
-				message: error.message,
-			};
+			throw new Error(error.message);
 		}
 
 		if (typeof error === "string") {
-			return {
-				success: false,
-				message: error,
-			};
+			throw new Error(error);
 		}
 
-		return {
-			success: false,
-			message: "An error occurred",
-		};
+		throw new Error("An error occurred");
 	}
 }

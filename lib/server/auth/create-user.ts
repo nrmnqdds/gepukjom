@@ -1,6 +1,10 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+import { createClient } from "@/lib/supabase/actions";
 
 type TRegisterValues = {
 	username: string;
@@ -8,18 +12,14 @@ type TRegisterValues = {
 	password: string;
 };
 
-/**
- * Creates a new user
- * @param {TRegisterValues} values
- * @returns {Promise<{ success: boolean; message: string }>} Success or error message
- */
-export async function CreateUser(
-	values: TRegisterValues,
-): Promise<{ success: boolean; message: string }> {
+export async function CreateUser(values: TRegisterValues) {
 	try {
+		const cookieStore = cookies();
+		const supabase = createClient(cookieStore);
+
 		const { username, email, password } = values;
 
-		const { data, error } = await supabase.auth.signUp({
+		const { error } = await supabase.auth.signUp({
 			email,
 			password,
 			options: {
@@ -30,32 +30,23 @@ export async function CreateUser(
 		});
 
 		if (error) {
-			return {
-				success: false,
-				message: error.message,
-			};
+			console.log(error);
+			throw new Error(error.message);
 		}
 
-		return {
-			success: true,
-			message: "User created",
-		};
+		revalidatePath("/", "layout");
+		redirect("/");
 	} catch (error) {
 		if (error instanceof Error) {
-			return {
-				success: false,
-				message: error.message,
-			};
+			console.log(error);
+			throw new Error(error.message);
 		}
+
 		if (typeof error === "string") {
-			return {
-				success: false,
-				message: error,
-			};
+			console.log(error);
+			throw new Error(error);
 		}
-		return {
-			success: false,
-			message: "Unknown error",
-		};
+
+		throw new Error("An error occurred");
 	}
 }

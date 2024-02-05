@@ -44,21 +44,6 @@ const LoginForm = () => {
 		mutationKey: ["login"],
 		mutationFn: async (values: z.infer<typeof formSchema>) =>
 			await LoginUser(values),
-		onSuccess: (data) => {
-			if (data?.success) {
-				toast({
-					title: "Login Successful!",
-				});
-
-				router.push("/");
-			} else {
-				toast({
-					title: "An error occured!",
-					description: data?.message,
-					variant: "destructive",
-				});
-			}
-		},
 		onError: (err) =>
 			toast({
 				title: "An error occured",
