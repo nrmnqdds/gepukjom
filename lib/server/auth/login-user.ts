@@ -27,18 +27,20 @@ export async function LoginUser(values: {
 			console.log(error);
 			throw new Error(error.message);
 		}
-
-		revalidatePath("/", "layout");
-		redirect("/");
 	} catch (error) {
 		if (error instanceof Error) {
+			console.log(error);
 			throw new Error(error.message);
 		}
 
 		if (typeof error === "string") {
+			console.log(error);
 			throw new Error(error);
 		}
 
 		throw new Error("An error occurred");
 	}
+
+	revalidatePath("/", "layout");
+	redirect("/");
 }

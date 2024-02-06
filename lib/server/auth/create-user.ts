@@ -33,9 +33,6 @@ export async function CreateUser(values: TRegisterValues) {
 			console.log(error);
 			throw new Error(error.message);
 		}
-
-		revalidatePath("/", "layout");
-		redirect("/");
 	} catch (error) {
 		if (error instanceof Error) {
 			console.log(error);
@@ -49,4 +46,7 @@ export async function CreateUser(values: TRegisterValues) {
 
 		throw new Error("An error occurred");
 	}
+
+	revalidatePath("/", "layout");
+	redirect("/");
 }

@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import LOGO from "/public/gepukjom.svg";
 import ThemeSwitcher from "./theme-switcher";
 
@@ -13,9 +12,7 @@ export default async function Navbar() {
 	const supabase = createClient(cookieStore);
 
 	const { data, error } = await supabase.auth.getUser();
-	if (error || !data?.user) {
-		redirect("/");
-	}
+
 	return (
 		<nav className="bg-transparent backdrop-blur-sm w-full border-b border-border fixed top-0 z-50 py-5 px-5 sm:px-24">
 			<div className="flex flex-row items-center justify-between">
@@ -34,7 +31,7 @@ export default async function Navbar() {
 				</Link>
 				{data?.user ? (
 					<div className="flex flex-row items-center space-x-5">
-						<p>{data.user.email}</p>
+						<p>{data.user.user_metadata.username}</p>
 						<Button type="button" aria-label="logout-button">
 							Logout
 						</Button>
