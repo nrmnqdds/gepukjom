@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 
 const CreateForm = () => {
 	return (
-		<Card className="space-y-2">
+		<Card>
 			<CardHeader>
 				<CardTitle>Basic Information</CardTitle>
 				<CardDescription>
@@ -18,11 +18,8 @@ const CreateForm = () => {
 				</CardDescription>
 			</CardHeader>
 
-			<div className="mx-5">
+			<CardContent className="space-y-2">
 				<Separator />
-			</div>
-
-			<CardContent>
 				<p>Card Content</p>
 			</CardContent>
 			<CardFooter>

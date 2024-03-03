@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { CreateUser } from "@/lib/server/auth/create-user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -60,7 +59,7 @@ const RegisterForm = () => {
 	const registerMutation = useMutation({
 		mutationKey: ["register"],
 		mutationFn: async (values: z.infer<typeof formSchema>) =>
-			await CreateUser(values),
+			console.log(values),
 		onSuccess: () =>
 			toast({
 				title: "Account created",

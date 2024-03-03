@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { LoginUser } from "@/lib/server/auth/login-user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -43,7 +42,7 @@ const LoginForm = () => {
 	const loginMutation = useMutation({
 		mutationKey: ["login"],
 		mutationFn: async (values: z.infer<typeof formSchema>) =>
-			await LoginUser(values),
+			console.log("Logging in with", values),
 		onSuccess: () =>
 			toast({
 				title: "Logged in",

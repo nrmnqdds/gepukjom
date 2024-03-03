@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.29.9",
     "@dotlottie/react-player": "^1.6.15",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",

@@ -3,6 +3,7 @@ import Navbar from "@/components/navbar";
 import QueryProvider from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -36,19 +37,21 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body className="scroll-smooth font-geist antialiased">
-				<ThemeProvider attribute="class" defaultTheme="dark">
-					<QueryProvider>
-						<Navbar />
-						<main className="bg-background w-full min-h-screen relative isolate p-24 sm:p-32 lg:p-40">
-							{children}
-						</main>
-						<Toaster />
-						<Footer />
-					</QueryProvider>
-				</ThemeProvider>
-			</body>
-		</html>
+		<ClerkProvider>
+			<html lang="en">
+				<body className="scroll-smooth font-geist antialiased">
+					<ThemeProvider attribute="class" defaultTheme="dark">
+						<QueryProvider>
+							<Navbar />
+							<main className="bg-background w-full min-h-screen relative isolate p-24 sm:p-32 lg:p-40">
+								{children}
+							</main>
+							<Toaster />
+							<Footer />
+						</QueryProvider>
+					</ThemeProvider>
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { createClient } from "@/lib/supabase/server";
+import { UserButton } from "@clerk/nextjs";
+// import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,9 +9,9 @@ import ThemeSwitcher from "./theme-switcher";
 
 export default async function Navbar() {
 	const cookieStore = cookies();
-	const supabase = createClient(cookieStore);
+	// const supabase = createClient(cookieStore);
 
-	const { data, error } = await supabase.auth.getUser();
+	// const { data } = await supabase.auth.getUser();
 
 	return (
 		<nav className="bg-transparent backdrop-blur-sm w-full border-b border-border fixed top-0 z-50 py-5 px-5 sm:px-24">
@@ -29,7 +29,7 @@ export default async function Navbar() {
 					/>
 					<h1 className="text-2xl font-bold hidden sm:block">GepukJom</h1>
 				</Link>
-				{data?.user ? (
+				{/* {data?.user ? (
 					<div className="flex flex-row items-center space-x-5">
 						<p>{data.user.user_metadata.username}</p>
 						<Button type="button" aria-label="logout-button">
@@ -37,29 +37,30 @@ export default async function Navbar() {
 						</Button>
 						<ThemeSwitcher />
 					</div>
-				) : (
-					<div className="flex flex-row items-center space-x-5">
-						<Link href="/auth/login">
-							<Button
-								type="button"
-								aria-label="login-button"
-								className="font-semibold"
-							>
-								Login
-							</Button>
-						</Link>
-						<Link href="/auth/register">
-							<Button
-								type="button"
-								aria-label="register-button"
-								className="font-semibold"
-							>
-								Register
-							</Button>
-						</Link>
-						<ThemeSwitcher />
-					</div>
-				)}
+				) : ( */}
+				<div className="flex flex-row items-center space-x-5">
+					<UserButton />
+					{/* <Link href="/auth/login">
+						<Button
+							type="button"
+							aria-label="login-button"
+							className="font-semibold"
+						>
+							Login
+						</Button>
+					</Link>
+					<Link href="/auth/register">
+						<Button
+							type="button"
+							aria-label="register-button"
+							className="font-semibold"
+						>
+							Register
+						</Button>
+					</Link> */}
+					<ThemeSwitcher />
+				</div>
+				{/* )} */}
 			</div>
 		</nav>
 	);
