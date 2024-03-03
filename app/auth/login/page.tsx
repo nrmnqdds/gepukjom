@@ -1,5 +1,6 @@
 import LoginForm from "@/components/auth/login-form";
 import LOGO from "@/public/gepukjom.svg";
+import { SignIn } from "@clerk/nextjs";
 import Image from "next/image";
 
 const RegisterPage = () => {
@@ -14,8 +15,9 @@ const RegisterPage = () => {
 					className="object-contain"
 				/>
 				<h1 className="text-5xl font-bold mb-5 sm:mb-10">Create Account</h1>
+				<SignIn />
 			</div>
-			<LoginForm />
+			{/* <LoginForm /> */}
 		</>
 	);
 };

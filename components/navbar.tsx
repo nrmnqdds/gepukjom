@@ -1,17 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
-// import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+import { SignInButton, UserButton, currentUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import LOGO from "/public/gepukjom.svg";
 import ThemeSwitcher from "./theme-switcher";
 
 export default async function Navbar() {
-	const cookieStore = cookies();
-	// const supabase = createClient(cookieStore);
-
-	// const { data } = await supabase.auth.getUser();
+	const user = await currentUser();
 
 	return (
 		<nav className="bg-transparent backdrop-blur-sm w-full border-b border-border fixed top-0 z-50 py-5 px-5 sm:px-24">
@@ -29,35 +23,9 @@ export default async function Navbar() {
 					/>
 					<h1 className="text-2xl font-bold hidden sm:block">GepukJom</h1>
 				</Link>
-				{/* {data?.user ? (
-					<div className="flex flex-row items-center space-x-5">
-						<p>{data.user.user_metadata.username}</p>
-						<Button type="button" aria-label="logout-button">
-							Logout
-						</Button>
-						<ThemeSwitcher />
-					</div>
-				) : ( */}
 				<div className="flex flex-row items-center space-x-5">
-					<UserButton />
-					{/* <Link href="/auth/login">
-						<Button
-							type="button"
-							aria-label="login-button"
-							className="font-semibold"
-						>
-							Login
-						</Button>
-					</Link>
-					<Link href="/auth/register">
-						<Button
-							type="button"
-							aria-label="register-button"
-							className="font-semibold"
-						>
-							Register
-						</Button>
-					</Link> */}
+					{user ? <UserButton /> : <SignInButton />}
+					{/* <UserButton /> */}
 					<ThemeSwitcher />
 				</div>
 				{/* )} */}
