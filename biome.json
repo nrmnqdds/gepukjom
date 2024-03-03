@@ -8,5 +8,17 @@
 		"rules": {
 			"recommended": true
 		}
+	},
+	"formatter": {
+		"ignore": ["/node_modules/**", "/.next/**"],
+		"enabled": true,
+		"indentStyle": "space",
+		"formatWithErrors": true
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double",
+			"trailingComma": "es5"
+		}
 	}
 }
